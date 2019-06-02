@@ -1,6 +1,6 @@
 # TA C.M.I. Reader Service
 
-Service which pulls the current data from the Technische Alternative C.M.I. JSON API and publishes it to the logreposit backend.
+Service which reads the current data from the Technische Alternative C.M.I. JSON API in a configurable interval and publishes it to the logreposit backend.
 
 ## Configuration
 
