@@ -1,0 +1,658 @@
+{
+  "Header": {
+    "Version": 3,
+    "Device": "87",
+    "Timestamp": 1508605524
+  },
+  "Data": {
+    "Inputs": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 26.1,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 58.3,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 47.0,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 14.6,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 49.7,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 46.0,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "A",
+        "Value": {
+          "Value": 57.5,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 8,
+        "AD": "A",
+        "Value": {
+          "Value": 26.6,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 9,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 10,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 11,
+        "AD": "A",
+        "Value": {
+          "Value": 65.7,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 12,
+        "AD": "A",
+        "Value": {
+          "Value": 18.3,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 13,
+        "AD": "A",
+        "Value": {
+          "Value": 21.2,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 14,
+        "AD": "A",
+        "Value": {
+          "Value": 29.5,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 15,
+        "AD": "A",
+        "Value": {
+          "Value": 14.8,
+          "Unit": "46",
+          "RAS": "3"
+        }
+      },
+      {
+        "Number": 16,
+        "AD": "A",
+        "Value": {
+          "Value": 19.9,
+          "Unit": "46",
+          "RAS": "1"
+        }
+      }
+    ],
+    "Outputs": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "State": 1,
+          "Value": 22,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "State": 0,
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "D",
+        "Value": {
+          "Value": 1,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "D",
+        "Value": {
+          "Value": 1,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "D",
+        "Value": {
+          "Value": 1,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 14,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 15,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 16,
+        "AD": "A",
+        "Value": {
+          "State": 1,
+          "Value": 4.45,
+          "Unit": "13"
+        }
+      }
+    ],
+    "Logging Analog": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 57.7,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 22.0,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 57.7,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 100.0,
+          "Unit": "8"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 1,
+          "Unit": "48"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 36.6,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "A",
+        "Value": {
+          "Value": 21.5,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 8,
+        "AD": "A",
+        "Value": {
+          "Value": 36.6,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 9,
+        "AD": "A",
+        "Value": {
+          "Value": 24.9,
+          "Unit": "8"
+        }
+      },
+      {
+        "Number": 10,
+        "AD": "A",
+        "Value": {
+          "Value": 1,
+          "Unit": "48"
+        }
+      },
+      {
+        "Number": 11,
+        "AD": "A",
+        "Value": {
+          "Value": 5.0,
+          "Unit": "1"
+        }
+      },
+      {
+        "Number": 12,
+        "AD": "A",
+        "Value": {
+          "Value": 15,
+          "Unit": "17"
+        }
+      },
+      {
+        "Number": 13,
+        "AD": "A",
+        "Value": {
+          "Value": 4434,
+          "Unit": "4"
+        }
+      }
+    ],
+    "Logging Digital": [
+      {
+        "Number": 1,
+        "AD": "D",
+        "Value": {
+          "Value": 1,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "D",
+        "Value": {
+          "Value": 1,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "D",
+        "Value": {
+          "Value": 0,
+          "Unit": "43"
+        }
+      }
+    ],
+    "DL-Bus": [
+    ],
+    "General": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      }
+    ],
+    "Date": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 21,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 10,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 17,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 6,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 42,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 294,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 8,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 9,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 10,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      }
+    ],
+    "Time": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 59,
+          "Unit": "4"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 16,
+          "Unit": "5"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 17,
+          "Unit": "15"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "A",
+        "Value": {
+          "Value": 1,
+          "Unit": "0"
+        }
+      },
+      {
+        "Number": 8,
+        "AD": "A",
+        "Value": {
+          "Value": 1037,
+          "Unit": "60"
+        }
+      }
+    ],
+    "Sun": [
+      {
+        "Number": 1,
+        "AD": "A",
+        "Value": {
+          "Value": 448,
+          "Unit": "60"
+        }
+      },
+      {
+        "Number": 2,
+        "AD": "A",
+        "Value": {
+          "Value": 1079,
+          "Unit": "60"
+        }
+      },
+      {
+        "Number": 3,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "5"
+        }
+      },
+      {
+        "Number": 4,
+        "AD": "A",
+        "Value": {
+          "Value": 589,
+          "Unit": "5"
+        }
+      },
+      {
+        "Number": 5,
+        "AD": "A",
+        "Value": {
+          "Value": 42,
+          "Unit": "5"
+        }
+      },
+      {
+        "Number": 6,
+        "AD": "A",
+        "Value": {
+          "Value": 0,
+          "Unit": "5"
+        }
+      },
+      {
+        "Number": 7,
+        "AD": "A",
+        "Value": {
+          "Value": 6.2,
+          "Unit": "54"
+        }
+      },
+      {
+        "Number": 8,
+        "AD": "A",
+        "Value": {
+          "Value": 246.4,
+          "Unit": "54"
+        }
+      },
+      {
+        "Number": 9,
+        "AD": "A",
+        "Value": {
+          "Value": 1,
+          "Unit": "0"
+        }
+      }
+    ]
+  },
+  "Status": "OK",
+  "Status code": 0
+}
