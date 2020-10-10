@@ -111,9 +111,9 @@ jobs:
             mvn versions:set -DnewVersion=${version}
 
             # build mysql jar
-            rm -f "target/cmi-reader-service.jar"
+            rm -f "target/ta-cmi-reader-service.jar"
             mvn -DskipTests=true package
-            mv "target/cmi-reader-service.jar" docker/app.jar
+            mv "target/ta-cmi-reader-service.jar" docker/app.jar
 
             # build docker image
             echo "Building docker image ${docker_image_tag} ..."
