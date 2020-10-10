@@ -6,7 +6,7 @@
 
     <groupId>com.logreposit.ta</groupId>
     <artifactId>ta-cmi-reader-service</artifactId>
-    <version>0-SNAPSHOT</version>
+    <version>SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ta-cmi-reader-service</name>
@@ -15,16 +15,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.5.RELEASE</version>
+        <version>2.3.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>12</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
@@ -58,6 +56,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
@@ -79,15 +82,14 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.14.2</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.8.0</version>
         </dependency>
 
     </dependencies>
@@ -102,6 +104,25 @@
                     <execution>
                         <goals>
                             <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
