@@ -49,7 +49,7 @@ public class CmiApiResponseTestUtil
 
             if ("D".equals(cmiApiOutput.getAd()))
             {
-                assertThat(cmiApiOutput.getValue().getState()).isNotNull();
+                assertThat(cmiApiOutput.getValue().getState()).isNull();
             }
 
             assertThat(cmiApiOutput.getValue().getRas()).isNull();
