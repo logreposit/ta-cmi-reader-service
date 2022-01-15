@@ -1,12 +1,13 @@
 package com.logreposit.ta.cmireaderservice;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateTests
 {
@@ -28,6 +29,6 @@ public class DateTests
         long difference = zoned1Time - zoned2Time;
         long newTimestamp = uvrTime + difference;
 
-        Assert.assertEquals(1508610847000L, newTimestamp);
+        assertThat(newTimestamp).isEqualTo(1508610847000L);
     }
 }

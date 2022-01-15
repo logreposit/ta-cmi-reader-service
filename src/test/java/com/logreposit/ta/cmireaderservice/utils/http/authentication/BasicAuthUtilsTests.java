@@ -1,14 +1,11 @@
 package com.logreposit.ta.cmireaderservice.utils.http.authentication;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BasicAuthUtilsTests
 {
-    private static final Logger logger = LoggerFactory.getLogger(BasicAuthUtils.class);
-
     @Test
     public void testBuildBasicAuthenticationHeaderValue()
     {
@@ -19,6 +16,6 @@ public class BasicAuthUtilsTests
         BasicAuthCredentials basicAuthCredentials     = new BasicAuthCredentials(username, password);
         String               authHeaderValueGenerated = BasicAuthUtils.buildBasicAuthenticationHeaderValue(basicAuthCredentials);
 
-        Assert.assertEquals(authHeaderValueExpected, authHeaderValueGenerated);
+        assertThat(authHeaderValueGenerated).isEqualTo(authHeaderValueExpected);
     }
 }
