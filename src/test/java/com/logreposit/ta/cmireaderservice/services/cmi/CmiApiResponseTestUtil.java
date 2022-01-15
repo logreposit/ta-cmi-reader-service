@@ -40,7 +40,7 @@ public class CmiApiResponseTestUtil
                 assertThat(cmiApiInput.getValue().getRas()).isNotNull();
             }
 
-            assertThat(cmiApiInput.getValue().getState()).isNotNull();
+            assertThat(cmiApiInput.getValue().getState()).isNull();
         }
 
         for (CmiApiOutput cmiApiOutput : cmiApiResponse.getData().getOutputs())
