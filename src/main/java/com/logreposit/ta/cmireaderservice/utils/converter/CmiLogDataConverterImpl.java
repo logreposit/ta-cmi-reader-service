@@ -42,6 +42,7 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
         DeviceType deviceType = convertDeviceType(cmiApiResponse.getHeader().getDevice());
 
         CmiLogData cmiLogData = new CmiLogData();
+
         cmiLogData.setDate(correctedLogDate);
         cmiLogData.setDeviceType(deviceType);
 
@@ -83,18 +84,14 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
 
     private static Input convertInput(CmiApiInput cmiApiInput)
     {
-        String ras = cmiApiInput.getValue().getRas();
+        final var value = cmiApiInput.getValue();
 
-        RasState rasState = null;
-        if (StringUtils.isNotEmpty(ras))
-        {
-            rasState = convertRasState(cmiApiInput.getValue().getRas());
-        }
-
+        RasState   rasState   = convertRasState(value.getRas());
+        Unit       unit       = convertUnit(value.getUnit());
         SignalType signalType = convertSignalType(cmiApiInput.getAd());
-        Unit       unit       = convertUnit(cmiApiInput.getValue().getUnit());
 
         Input input = new Input();
+
         input.setRasState(rasState);
         input.setNumber(cmiApiInput.getNumber());
         input.setSignal(signalType);
@@ -106,23 +103,27 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
 
     private static Output convertOutput(CmiApiOutput cmiApiOutput)
     {
+        final var value = cmiApiOutput.getValue();
+
         SignalType signalType = convertSignalType(cmiApiOutput.getAd());
-        Unit       unit       = convertUnit(cmiApiOutput.getValue().getUnit());
+        Unit       unit       = convertUnit(value.getUnit());
 
         Output output = new Output();
+
         output.setNumber(cmiApiOutput.getNumber());
         output.setSignal(signalType);
         output.setUnit(unit);
 
-        if (SignalType.DIGITAL.equals(signalType) && cmiApiOutput.getValue().getValue() != null)
+        if (SignalType.DIGITAL.equals(signalType) && value.getValue() != null)
         {
-            int state = cmiApiOutput.getValue().getValue().intValue();
+            int state = value.getValue().intValue();
+
             output.setState(state);
         }
         else
         {
-            output.setValue(cmiApiOutput.getValue().getValue());
-            output.setState(cmiApiOutput.getValue().getState());
+            output.setValue(value.getValue());
+            output.setState(value.getState());
         }
 
         return output;
@@ -130,218 +131,148 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
 
     private static AnalogLoggingValue convertAnalogLoggingValue(CmiApiLoggingAnalog cmiApiLoggingAnalog)
     {
+        final var value = cmiApiLoggingAnalog.getValue();
+
         SignalType signalType = convertSignalType(cmiApiLoggingAnalog.getAd());
-        Unit       unit       = convertUnit(cmiApiLoggingAnalog.getValue().getUnit());
+        Unit       unit       = convertUnit(value.getUnit());
 
         AnalogLoggingValue analogLoggingValue = new AnalogLoggingValue();
+
         analogLoggingValue.setNumber(cmiApiLoggingAnalog.getNumber());
         analogLoggingValue.setSignal(signalType);
         analogLoggingValue.setUnit(unit);
-        analogLoggingValue.setValue(cmiApiLoggingAnalog.getValue().getValue());
+        analogLoggingValue.setValue(value.getValue());
 
         return analogLoggingValue;
     }
 
     private static DigitalLoggingValue convertDigitalLoggingValue(CmiApiLoggingDigital cmiApiLoggingDigital)
     {
+        final var value = cmiApiLoggingDigital.getValue();
+
         SignalType signalType = convertSignalType(cmiApiLoggingDigital.getAd());
-        Unit       unit       = convertUnit(cmiApiLoggingDigital.getValue().getUnit());
+        Unit       unit       = convertUnit(value.getUnit());
 
         DigitalLoggingValue digitalLoggingValue = new DigitalLoggingValue();
+
         digitalLoggingValue.setNumber(cmiApiLoggingDigital.getNumber());
         digitalLoggingValue.setSignal(signalType);
         digitalLoggingValue.setUnit(unit);
-        digitalLoggingValue.setValue(cmiApiLoggingDigital.getValue().getValue());
+        digitalLoggingValue.setValue(value.getValue());
 
         return digitalLoggingValue;
     }
 
     private static SignalType convertSignalType(String taSignalType)
     {
-        switch (taSignalType)
-        {
-            case "A":
-                return SignalType.ANALOG;
-            case "D":
-                return SignalType.DIGITAL;
-            default:
-                return SignalType.UNKNOWN;
-        }
+        return switch (taSignalType)
+                {
+                    case "A" -> SignalType.ANALOG;
+                    case "D" -> SignalType.DIGITAL;
+                    default -> SignalType.UNKNOWN;
+                };
     }
 
     private static RasState convertRasState(String taRasState)
     {
-        switch (taRasState)
-        {
-            case "0":
-                return RasState.TIME_AUTO;
-            case "1":
-                return RasState.STANDARD;
-            case "2":
-                return RasState.SETBACK;
-            case "3":
-                return RasState.STANDBY_FROST_PROTECTION;
-            default:
-                return RasState.UNKNOWN;
+        if (StringUtils.isEmpty(taRasState)) {
+            return null;
         }
+
+        return switch (taRasState)
+                {
+                    case "0" -> RasState.TIME_AUTO;
+                    case "1" -> RasState.STANDARD;
+                    case "2" -> RasState.SETBACK;
+                    case "3" -> RasState.STANDBY_FROST_PROTECTION;
+                    default -> RasState.UNKNOWN;
+                };
     }
 
     private static Unit convertUnit(String taUnit)
     {
-        switch (taUnit)
-        {
-            case "0":
-                return Unit.UNKNOWN;
-            case "1":
-                return Unit.DEGREES_CELSIUS;
-            case "2":
-                return Unit.WATTS_PER_SQUARE_METER;
-            case "3":
-                return Unit.LITERS_PER_HOUR;
-            case "4":
-                return Unit.SECONDS;
-            case "5":
-                return Unit.MINUTES;
-            case "6":
-                return Unit.LITERS_PER_IMPULSE;
-            case "7":
-                return Unit.KELVIN;
-            case "8":
-                return Unit.PERCENT;
-            case "10":
-                return Unit.KILOWATTS;
-            case "11":
-                return Unit.KILOWATT_HOURS;
-            case "12":
-                return Unit.MEGAWATT_HOURS;
-            case "13":
-                return Unit.VOLTS;
-            case "14":
-                return Unit.MILLIAMPERES;
-            case "15":
-                return Unit.HOURS;
-            case "16":
-                return Unit.DAYS;
-            case "17":
-                return Unit.IMPULSES;
-            case "18":
-                return Unit.KILO_OHMS;
-            case "19":
-                return Unit.LITERS;
-            case "20":
-                return Unit.KILOMETERS_PER_HOUR;
-            case "21":
-                return Unit.HERTZ;
-            case "22":
-                return Unit.LITERS_PER_MINUTE;
-            case "23":
-                return Unit.BAR;
-            case "24":
-                return Unit.UNKNOWN;
-            case "25":
-                return Unit.KILOMETERS;
-            case "26":
-                return Unit.METERS;
-            case "27":
-                return Unit.MILLIMETERS;
-            case "28":
-                return Unit.CUBIC_METERS;
-            case "35":
-                return Unit.LITERS_PER_DAY;
-            case "36":
-                return Unit.METERS_PER_SECOND;
-            case "37":
-                return Unit.CUBIC_METERS_PER_MINUTE;
-            case "38":
-                return Unit.CUBIC_METERS_PER_HOUR;
-            case "39":
-                return Unit.CUBIC_METERS_PER_DAY;
-            case "40":
-                return Unit.MILLIMETERS_PER_MINUTE;
-            case "41":
-                return Unit.MILLIMETERS_PER_HOUR;
-            case "42":
-                return Unit.MILLIMETERS_PER_DAY;
-            case "43":
-                return Unit.ON_OFF;
-            case "44":
-                return Unit.YES_NO;
-            case "46":
-                return Unit.DEGREES_CELSIUS;
-            case "48":
-                return Unit.HEATING_CIRCUIT_CONTROL_OPERATING_MODE;
-            case "50":
-                return Unit.EUR;
-            case "51":
-                return Unit.USD;
-            case "52":
-                return Unit.GRAMS_PER_CUBIC_METER;
-            case "53":
-                return Unit.UNKNOWN;
-            case "54":
-                return Unit.DEGREES;
-            case "56":
-                return Unit.DEGREES;
-            case "57":
-                return Unit.SECONDS;
-            case "58":
-                return Unit.UNKNOWN;
-            case "59":
-                return Unit.PERCENT;
-            case "60":
-                return Unit.TIME;
-            case "63":
-                return Unit.AMPERES;
-            case "65":
-                return Unit.MILLIBAR;
-            case "66":
-                return Unit.PASCAL;
-            case "67":
-                return Unit.PARTS_PER_MILLION;
-            default:
-                return Unit.UNKNOWN;
-        }
+        return switch (taUnit)
+                {
+                    case "0" -> Unit.UNKNOWN;
+                    case "1" -> Unit.DEGREES_CELSIUS;
+                    case "2" -> Unit.WATTS_PER_SQUARE_METER;
+                    case "3" -> Unit.LITERS_PER_HOUR;
+                    case "4" -> Unit.SECONDS;
+                    case "5" -> Unit.MINUTES;
+                    case "6" -> Unit.LITERS_PER_IMPULSE;
+                    case "7" -> Unit.KELVIN;
+                    case "8" -> Unit.PERCENT;
+                    case "10" -> Unit.KILOWATTS;
+                    case "11" -> Unit.KILOWATT_HOURS;
+                    case "12" -> Unit.MEGAWATT_HOURS;
+                    case "13" -> Unit.VOLTS;
+                    case "14" -> Unit.MILLIAMPERES;
+                    case "15" -> Unit.HOURS;
+                    case "16" -> Unit.DAYS;
+                    case "17" -> Unit.IMPULSES;
+                    case "18" -> Unit.KILO_OHMS;
+                    case "19" -> Unit.LITERS;
+                    case "20" -> Unit.KILOMETERS_PER_HOUR;
+                    case "21" -> Unit.HERTZ;
+                    case "22" -> Unit.LITERS_PER_MINUTE;
+                    case "23" -> Unit.BAR;
+                    case "24" -> Unit.UNKNOWN;
+                    case "25" -> Unit.KILOMETERS;
+                    case "26" -> Unit.METERS;
+                    case "27" -> Unit.MILLIMETERS;
+                    case "28" -> Unit.CUBIC_METERS;
+                    case "35" -> Unit.LITERS_PER_DAY;
+                    case "36" -> Unit.METERS_PER_SECOND;
+                    case "37" -> Unit.CUBIC_METERS_PER_MINUTE;
+                    case "38" -> Unit.CUBIC_METERS_PER_HOUR;
+                    case "39" -> Unit.CUBIC_METERS_PER_DAY;
+                    case "40" -> Unit.MILLIMETERS_PER_MINUTE;
+                    case "41" -> Unit.MILLIMETERS_PER_HOUR;
+                    case "42" -> Unit.MILLIMETERS_PER_DAY;
+                    case "43" -> Unit.ON_OFF;
+                    case "44" -> Unit.YES_NO;
+                    case "46" -> Unit.DEGREES_CELSIUS;
+                    case "48" -> Unit.HEATING_CIRCUIT_CONTROL_OPERATING_MODE;
+                    case "50" -> Unit.EUR;
+                    case "51" -> Unit.USD;
+                    case "52" -> Unit.GRAMS_PER_CUBIC_METER;
+                    case "53" -> Unit.UNKNOWN;
+                    case "54" -> Unit.DEGREES;
+                    case "56" -> Unit.DEGREES;
+                    case "57" -> Unit.SECONDS;
+                    case "58" -> Unit.UNKNOWN;
+                    case "59" -> Unit.PERCENT;
+                    case "60" -> Unit.TIME;
+                    case "63" -> Unit.AMPERES;
+                    case "65" -> Unit.MILLIBAR;
+                    case "66" -> Unit.PASCAL;
+                    case "67" -> Unit.PARTS_PER_MILLION;
+                    default -> Unit.UNKNOWN;
+                };
     }
 
     private static DeviceType convertDeviceType(String taDeviceType)
     {
-        switch (taDeviceType)
-        {
-            case "7F":
-                return DeviceType.COE;
-            case "80":
-                return DeviceType.UVR1611;
-            case "81":
-                return DeviceType.CAN_MT;
-            case "82":
-                return DeviceType.CAN_IO44;
-            case "83":
-                return DeviceType.CAN_IO35;
-            case "84":
-                return DeviceType.CAN_BC;
-            case "85":
-                return DeviceType.CAN_EZ;
-            case "86":
-                return DeviceType.CAN_TOUCH;
-            case "87":
-                return DeviceType.UVR16X2;
-            case "88":
-                return DeviceType.RSM610;
-            case "89":
-                return DeviceType.CAN_IO45;
-            case "8A":
-                return DeviceType.CMI;
-            case "8B":
-                return DeviceType.CAN_EZ2;
-            case "8C":
-                return DeviceType.CAN_MTX2;
-            case "8D":
-                return DeviceType.CAN_BC2;
-            case "A3":
-                return DeviceType.BL_NET;
-            default:
-                return DeviceType.UNKNOWN;
-        }
+        return switch (taDeviceType)
+                {
+                    case "7F" -> DeviceType.COE;
+                    case "80" -> DeviceType.UVR1611;
+                    case "81" -> DeviceType.CAN_MT;
+                    case "82" -> DeviceType.CAN_IO44;
+                    case "83" -> DeviceType.CAN_IO35;
+                    case "84" -> DeviceType.CAN_BC;
+                    case "85" -> DeviceType.CAN_EZ;
+                    case "86" -> DeviceType.CAN_TOUCH;
+                    case "87" -> DeviceType.UVR16X2;
+                    case "88" -> DeviceType.RSM610;
+                    case "89" -> DeviceType.CAN_IO45;
+                    case "8A" -> DeviceType.CMI;
+                    case "8B" -> DeviceType.CAN_EZ2;
+                    case "8C" -> DeviceType.CAN_MTX2;
+                    case "8D" -> DeviceType.CAN_BC2;
+                    case "A3" -> DeviceType.BL_NET;
+                    default -> DeviceType.UNKNOWN;
+                };
     }
 
     private static void throwExceptionIfCmiApiResponseIsNotValid(CmiApiResponse cmiApiResponse) throws CmiLogDataConverterException

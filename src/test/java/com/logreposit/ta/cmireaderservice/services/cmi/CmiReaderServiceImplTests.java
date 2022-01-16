@@ -7,18 +7,18 @@ import com.logreposit.ta.cmireaderservice.utils.http.HttpClient;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.common.HttpClientResponse;
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.nio.charset.StandardCharsets;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {ObjectMapper.class})
 public class CmiReaderServiceImplTests
 {
@@ -30,7 +30,7 @@ public class CmiReaderServiceImplTests
 
     private CmiReaderService cmiReaderService;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         this.cmiReaderService = new CmiReaderServiceImpl(this.objectMapper, this.httpClient);

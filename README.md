@@ -12,6 +12,8 @@ Service which reads the current data from the Technische Alternative C.M.I. JSON
 
 The configuration is done via environment variables.
 
+- docker-compose: `mem_limit: 75m`
+
 ## TODO 
 
 Table with configuration options and default/example values.

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.common.HttpClientResponse;
 import com.logreposit.ta.cmireaderservice.utils.http.exceptions.HttpClientException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 public class HttpClientTestsIT
 {
@@ -18,7 +20,7 @@ public class HttpClientTestsIT
 
     private HttpClient httpClient;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         this.httpClient = new HttpClientImpl();
@@ -32,7 +34,8 @@ public class HttpClientTestsIT
         String url      = String.format("https://httpbin.org/basic-auth/%s/%s", username, password);
 
         HttpClientResponse response = this.httpClient.get(url, new BasicAuthCredentials(username, password));
-        Assert.assertEquals(200, response.getHttpStatusCode());
+
+        assertThat(response.getHttpStatusCode()).isEqualTo(200);
     }
 
     @Test
@@ -42,15 +45,9 @@ public class HttpClientTestsIT
         String password = "X";
         String url      = String.format("https://httpbin.org/basic-auth/%s/%s", username, password + "invalid");
 
-        try
-        {
-            HttpClientResponse response = this.httpClient.get(url, new BasicAuthCredentials(username, password));
-            Assert.fail("Should never reach this code.");
-        }
-        catch (HttpClientException exception)
-        {
-            Assert.assertEquals(401, exception.getHttpClientResponse().getHttpStatusCode());
-        }
+        var exception = catchThrowableOfType(() -> this.httpClient.get(url, new BasicAuthCredentials(username, password)), HttpClientException.class);
+
+        assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(401);
     }
 
     @Test
@@ -61,12 +58,13 @@ public class HttpClientTestsIT
         String url      = "https://httpbin.org/get";
 
         HttpClientResponse response = this.httpClient.get(url, new BasicAuthCredentials(username, password));
-        Assert.assertEquals(200, response.getHttpStatusCode());
-        Assert.assertTrue(response.getResponseBody().length() > 1);
+
+        assertThat(response.getHttpStatusCode()).isEqualTo(200);
+        assertThat(response.getResponseBody()).hasSizeGreaterThan(1);
     }
 
     @Test
-    public void testInvalidRequestMethodWithPostCall() throws JsonProcessingException
+    public void testInvalidRequestMethodWithPostCall()
     {
         String username = "myusernameAwesome";
         String password = "X";
@@ -76,15 +74,9 @@ public class HttpClientTestsIT
         hashMap.put("myKey1", "myValue1");
         hashMap.put("myKey2", "myValue2");
 
-        try
-        {
-            HttpClientResponse response = this.httpClient.post(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password));
-            Assert.fail("Should never reach this code.");
-        }
-        catch (HttpClientException exception)
-        {
-            Assert.assertEquals(405, exception.getHttpClientResponse().getHttpStatusCode());
-        }
+        var exception = catchThrowableOfType(() -> this.httpClient.post(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password)), HttpClientException.class);
+
+        assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
 
     @Test
@@ -98,16 +90,9 @@ public class HttpClientTestsIT
         hashMap.put("myKey1", "myValue1");
         hashMap.put("myKey2", "myValue2");
 
-        try
-        {
-            this.httpClient.put(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password));
+        var exception = catchThrowableOfType(() -> this.httpClient.put(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password)), HttpClientException.class);
 
-            Assert.fail("Should never reach this code.");
-        }
-        catch (HttpClientException exception)
-        {
-            Assert.assertEquals(405, exception.getHttpClientResponse().getHttpStatusCode());
-        }
+        assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
 
     @Test
@@ -117,14 +102,8 @@ public class HttpClientTestsIT
         String password = "X";
         String url      = "https://httpbin.org/get";
 
-        try
-        {
-            HttpClientResponse response = this.httpClient.delete(url, new BasicAuthCredentials(username, password));
-            Assert.fail("Should never reach this code.");
-        }
-        catch (HttpClientException exception)
-        {
-            Assert.assertEquals(405, exception.getHttpClientResponse().getHttpStatusCode());
-        }
+        var exception = catchThrowableOfType(() -> this.httpClient.delete(url, new BasicAuthCredentials(username, password)), HttpClientException.class);
+
+        assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
 }
