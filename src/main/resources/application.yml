@@ -18,14 +18,6 @@ logging:
   file:
     name: logs/cmi-reader-service.log
 
-server:
-  port: "${port:8080}"
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-
 spring:
   jackson:
     date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
