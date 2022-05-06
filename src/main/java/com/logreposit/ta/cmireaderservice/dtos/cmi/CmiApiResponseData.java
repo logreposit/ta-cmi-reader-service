@@ -46,6 +46,8 @@ public class CmiApiResponseData
         this.outputs              = new ArrayList<>();
         this.analogLoggingValues  = new ArrayList<>();
         this.digitalLoggingValues = new ArrayList<>();
+        this.analogNetworkValues  = new ArrayList<>();
+        this.digitalNetworkValues = new ArrayList<>();
         this.dlBusValues          = new ArrayList<>();
     }
 }
