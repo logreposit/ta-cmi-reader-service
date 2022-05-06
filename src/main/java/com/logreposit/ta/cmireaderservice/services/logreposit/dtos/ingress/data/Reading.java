@@ -7,5 +7,5 @@ public record Reading(
         Instant date,
         String measurement,
         List<Tag> tags,
-        List<Field> fields
+        List<Field<?>> fields
 ) {}
