@@ -9,7 +9,6 @@ import com.logreposit.ta.cmireaderservice.services.cmi.CmiReaderService;
 import com.logreposit.ta.cmireaderservice.services.cmi.exceptions.CmiReaderServiceException;
 import com.logreposit.ta.cmireaderservice.services.collector.exceptions.ScheduledLogCollectorException;
 import com.logreposit.ta.cmireaderservice.utils.converter.CmiLogDataConverter;
-import com.logreposit.ta.cmireaderservice.utils.converter.exceptions.CmiLogDataConverterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,10 @@ public class ScheduledLogCollector
         Date begin = new Date();
 
         CmiApiResponse cmiApiResponse = this.collectCmiLogdata();
-        CmiLogData     cmiLogData     = this.convertResponseToLogData(cmiApiResponse);
+
+        throwExceptionIfCmiApiResponseIsNotValid(cmiApiResponse);
+
+        final var cmiLogData = this.cmiLogDataConverter.convertCmiApiResponse(cmiApiResponse);
 
         long logFetchDuration = ((new Date()).getTime() - begin.getTime()) / 1000;
         logger.info("Finished collecting and converting log values. Operation took {} seconds.", logFetchDuration);
@@ -84,20 +86,6 @@ public class ScheduledLogCollector
         }
     }
 
-    private CmiLogData convertResponseToLogData(CmiApiResponse cmiApiResponse) throws ScheduledLogCollectorException
-    {
-        try
-        {
-            CmiLogData cmiLogData = this.cmiLogDataConverter.convertCmiApiResponse(cmiApiResponse);
-            return cmiLogData;
-        }
-        catch (CmiLogDataConverterException e)
-        {
-            logger.error("Caught Exception while converting CmiApiResponse to CmiLogData", e);
-            throw new ScheduledLogCollectorException("Caught Exception while converting CmiApiResponse to CmiLogData", e);
-        }
-    }
-
     private void publishData(CmiLogData cmiLogData) throws ScheduledLogCollectorException
     {
         try
@@ -108,6 +96,24 @@ public class ScheduledLogCollector
         {
             logger.error("Unable to publish cmiLogData", e);
             throw new ScheduledLogCollectorException("Unable to publish cmiLogData", e);
+        }
+    }
+
+    private void throwExceptionIfCmiApiResponseIsNotValid(CmiApiResponse cmiApiResponse) throws ScheduledLogCollectorException
+    {
+        if (cmiApiResponse == null)
+        {
+            throw new ScheduledLogCollectorException("cmiApiResponse == null");
+        }
+
+        if (cmiApiResponse.getStatusCode() != 0 || !"OK".equals(cmiApiResponse.getStatus()))
+        {
+            throw new ScheduledLogCollectorException("cmiApiResponse does not contain any useful data");
+        }
+
+        if (cmiApiResponse.getData() == null || cmiApiResponse.getData().getInputs() == null || cmiApiResponse.getData().getOutputs() == null)
+        {
+            throw new ScheduledLogCollectorException("cmiApiResponse.data is corrupt");
         }
     }
 }
