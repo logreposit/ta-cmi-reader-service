@@ -1,4 +1,4 @@
-package com.logreposit.ta.cmireaderservice.utils.converter;
+package com.logreposit.ta.cmireaderservice.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

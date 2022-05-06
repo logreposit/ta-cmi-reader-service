@@ -9,9 +9,9 @@ import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingDigital;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkAnalog;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkDigital;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiOutput;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.RasState;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.SignalType;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.Unit;
+import com.logreposit.ta.cmireaderservice.dtos.common.RasState;
+import com.logreposit.ta.cmireaderservice.dtos.common.SignalType;
+import com.logreposit.ta.cmireaderservice.dtos.common.Unit;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.Field;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.FloatField;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.IngressData;
@@ -20,7 +20,7 @@ import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.StringField;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.Tag;
 import com.logreposit.ta.cmireaderservice.services.logreposit.exceptions.LogrepositIngressDataMapperException;
-import com.logreposit.ta.cmireaderservice.utils.converter.TimeUtils;
+import com.logreposit.ta.cmireaderservice.utils.TimeUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -41,7 +41,7 @@ public class LogrepositIngressDataMapper
         this.applicationConfiguration = applicationConfiguration;
     }
 
-    IngressData toLogrepositIngressData(CmiApiResponse cmiApiResponse)
+    public IngressData toLogrepositIngressData(CmiApiResponse cmiApiResponse)
     {
         final var correctedLogDate = this.getCorrectedDateInstanceForCmiTimestamp(cmiApiResponse.getHeader().getTimestamp());
         final var data = cmiApiResponse.getData();

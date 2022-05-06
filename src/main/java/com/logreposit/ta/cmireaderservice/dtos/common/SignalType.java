@@ -1,4 +1,4 @@
-package com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums;
+package com.logreposit.ta.cmireaderservice.dtos.common;
 
 import java.util.Arrays;
 

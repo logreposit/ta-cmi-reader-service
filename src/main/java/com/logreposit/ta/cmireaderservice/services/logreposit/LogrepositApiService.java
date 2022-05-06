@@ -44,7 +44,7 @@ public class LogrepositApiService
             maxAttempts = 5,
             backoff = @Backoff(delay = 500)
     )
-    void pushData(IngressData data) {
+    public void pushData(IngressData data) {
         final var url = applicationConfiguration.getApiBaseUrl() + "/v2/ingress/data";
 
         logger.info("Sending data to Logreposit API ({}): {}", url, data);

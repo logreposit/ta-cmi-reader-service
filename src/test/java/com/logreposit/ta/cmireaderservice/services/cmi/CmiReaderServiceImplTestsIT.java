@@ -1,7 +1,7 @@
 package com.logreposit.ta.cmireaderservice.services.cmi;
 
 import com.logreposit.ta.cmireaderservice.dtos.cmi.CmiApiResponse;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.DeviceType;
+import com.logreposit.ta.cmireaderservice.dtos.common.DeviceType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
