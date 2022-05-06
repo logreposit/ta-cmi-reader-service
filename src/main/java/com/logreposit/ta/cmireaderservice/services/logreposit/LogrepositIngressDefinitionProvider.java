@@ -35,8 +35,9 @@ public class LogrepositIngressDefinitionProvider
                                 )
                         ),
                         new MeasurementDefinition("analog_logging", tags, List.of(valueField)),
-                        new MeasurementDefinition("digital_logging", tags, List.of(valueField))
-                        // TODO DoM: analog_network, digital_network for T.A. UVR1611
+                        new MeasurementDefinition("digital_logging", tags, List.of(valueField)),
+                        new MeasurementDefinition("analog_network", tags, List.of(valueField)),
+                        new MeasurementDefinition("digital_network", tags, List.of(valueField))
                 )
         );
     }
