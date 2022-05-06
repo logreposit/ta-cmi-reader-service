@@ -15,7 +15,6 @@ import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.DeviceType
 import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.RasState;
 import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.SignalType;
 import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.Unit;
-import com.logreposit.ta.cmireaderservice.utils.converter.exceptions.CmiLogDataConverterException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,10 +33,8 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
         this.applicationConfiguration = applicationConfiguration;
     }
 
-    public CmiLogData convertCmiApiResponse(CmiApiResponse cmiApiResponse) throws CmiLogDataConverterException
+    public CmiLogData convertCmiApiResponse(CmiApiResponse cmiApiResponse)
     {
-        throwExceptionIfCmiApiResponseIsNotValid(cmiApiResponse);
-
         Date correctedLogDate = this.getCorrectedDateInstanceForCmiTimestamp(cmiApiResponse.getHeader().getTimestamp());
         DeviceType deviceType = convertDeviceType(cmiApiResponse.getHeader().getDevice());
 
@@ -273,23 +270,5 @@ public class CmiLogDataConverterImpl implements CmiLogDataConverter
                     case "A3" -> DeviceType.BL_NET;
                     default -> DeviceType.UNKNOWN;
                 };
-    }
-
-    private static void throwExceptionIfCmiApiResponseIsNotValid(CmiApiResponse cmiApiResponse) throws CmiLogDataConverterException
-    {
-        if (cmiApiResponse == null)
-        {
-            throw new CmiLogDataConverterException("cmiApiResponse == null");
-        }
-
-        if (cmiApiResponse.getStatusCode() != 0 || !"OK".equals(cmiApiResponse.getStatus()))
-        {
-            throw new CmiLogDataConverterException("cmiApiResponse does not contain any useful data");
-        }
-
-        if (cmiApiResponse.getData() == null || cmiApiResponse.getData().getInputs() == null || cmiApiResponse.getData().getOutputs() == null)
-        {
-            throw new CmiLogDataConverterException("cmiApiResponse.data is corrupt");
-        }
     }
 }
