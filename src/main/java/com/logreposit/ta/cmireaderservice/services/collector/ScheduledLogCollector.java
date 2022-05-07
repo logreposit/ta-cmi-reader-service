@@ -1,15 +1,13 @@
 package com.logreposit.ta.cmireaderservice.services.collector;
 
-import com.logreposit.ta.cmireaderservice.communication.http.logrepositapi.LogrepositApiClient;
 import com.logreposit.ta.cmireaderservice.configuration.ApplicationConfiguration;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.CmiApiResponse;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.CmiLogData;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.DeviceType;
+import com.logreposit.ta.cmireaderservice.dtos.common.DeviceType;
 import com.logreposit.ta.cmireaderservice.services.cmi.CmiReaderService;
 import com.logreposit.ta.cmireaderservice.services.cmi.exceptions.CmiReaderServiceException;
 import com.logreposit.ta.cmireaderservice.services.collector.exceptions.ScheduledLogCollectorException;
-import com.logreposit.ta.cmireaderservice.utils.converter.CmiLogDataConverter;
-import com.logreposit.ta.cmireaderservice.utils.converter.exceptions.CmiLogDataConverterException;
+import com.logreposit.ta.cmireaderservice.services.logreposit.LogrepositApiService;
+import com.logreposit.ta.cmireaderservice.services.logreposit.LogrepositIngressDataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,43 +22,47 @@ public class ScheduledLogCollector
     private static final Logger logger = LoggerFactory.getLogger(ScheduledLogCollector.class);
 
     private final ApplicationConfiguration applicationConfiguration;
-    private final CmiReaderService         cmiReaderService;
-    private final CmiLogDataConverter      cmiLogDataConverter;
-    private final LogrepositApiClient      logrepositApiClient;
+    private final CmiReaderService cmiReaderService;
+    private final LogrepositIngressDataMapper logrepositIngressDataMapper;
+    private final LogrepositApiService logrepositApiService;
 
     @Autowired
     public ScheduledLogCollector(ApplicationConfiguration applicationConfiguration,
                                  CmiReaderService cmiReaderService,
-                                 CmiLogDataConverter cmiLogDataConverter,
-                                 LogrepositApiClient logrepositApiClient)
+                                 LogrepositIngressDataMapper logrepositIngressDataMapper,
+                                 LogrepositApiService logrepositApiService)
     {
         this.applicationConfiguration = applicationConfiguration;
-        this.cmiReaderService         = cmiReaderService;
-        this.cmiLogDataConverter      = cmiLogDataConverter;
-        this.logrepositApiClient      = logrepositApiClient;
+        this.cmiReaderService = cmiReaderService;
+        this.logrepositIngressDataMapper = logrepositIngressDataMapper;
+        this.logrepositApiService = logrepositApiService;
     }
 
     @Scheduled(fixedDelayString = "${cmireaderservice.collect-interval}")
     public void collect() throws ScheduledLogCollectorException
     {
-        CmiLogData cmiLogData = this.retrieveCmiLogData();
+        final var cmiApiResponse = this.retrieveCmiApiResponse();
 
-        this.publishData(cmiLogData);
+        final var ingressData = logrepositIngressDataMapper.toLogrepositIngressData(cmiApiResponse);
+
+        logrepositApiService.pushData(ingressData);
     }
 
-    private CmiLogData retrieveCmiLogData() throws ScheduledLogCollectorException
+    private CmiApiResponse retrieveCmiApiResponse() throws ScheduledLogCollectorException
     {
         logger.debug("Started collecting log values.");
 
         Date begin = new Date();
 
         CmiApiResponse cmiApiResponse = this.collectCmiLogdata();
-        CmiLogData     cmiLogData     = this.convertResponseToLogData(cmiApiResponse);
 
-        long logFetchDuration = ((new Date()).getTime() - begin.getTime()) / 1000;
-        logger.info("Finished collecting and converting log values. Operation took {} seconds.", logFetchDuration);
+        throwExceptionIfCmiApiResponseIsNotValid(cmiApiResponse);
 
-        return cmiLogData;
+        long logFetchDuration = (new Date()).getTime() - begin.getTime();
+
+        logger.info("Finished collecting log values. Operation took {} milliseconds.", logFetchDuration);
+
+        return cmiApiResponse;
     }
 
     private CmiApiResponse collectCmiLogdata() throws ScheduledLogCollectorException
@@ -84,30 +86,21 @@ public class ScheduledLogCollector
         }
     }
 
-    private CmiLogData convertResponseToLogData(CmiApiResponse cmiApiResponse) throws ScheduledLogCollectorException
+    private void throwExceptionIfCmiApiResponseIsNotValid(CmiApiResponse cmiApiResponse) throws ScheduledLogCollectorException
     {
-        try
+        if (cmiApiResponse == null)
         {
-            CmiLogData cmiLogData = this.cmiLogDataConverter.convertCmiApiResponse(cmiApiResponse);
-            return cmiLogData;
+            throw new ScheduledLogCollectorException("cmiApiResponse == null");
         }
-        catch (CmiLogDataConverterException e)
-        {
-            logger.error("Caught Exception while converting CmiApiResponse to CmiLogData", e);
-            throw new ScheduledLogCollectorException("Caught Exception while converting CmiApiResponse to CmiLogData", e);
-        }
-    }
 
-    private void publishData(CmiLogData cmiLogData) throws ScheduledLogCollectorException
-    {
-        try
+        if (cmiApiResponse.getStatusCode() != 0 || !"OK".equals(cmiApiResponse.getStatus()))
         {
-            this.logrepositApiClient.publishData(cmiLogData);
+            throw new ScheduledLogCollectorException("cmiApiResponse does not contain any useful data");
         }
-        catch (Exception e)
+
+        if (cmiApiResponse.getData() == null || cmiApiResponse.getData().getInputs() == null || cmiApiResponse.getData().getOutputs() == null)
         {
-            logger.error("Unable to publish cmiLogData", e);
-            throw new ScheduledLogCollectorException("Unable to publish cmiLogData", e);
+            throw new ScheduledLogCollectorException("cmiApiResponse.data is corrupt");
         }
     }
 }

@@ -2,7 +2,7 @@ package com.logreposit.ta.cmireaderservice.services.cmi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.CmiApiResponse;
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.DeviceType;
+import com.logreposit.ta.cmireaderservice.dtos.common.DeviceType;
 import com.logreposit.ta.cmireaderservice.services.cmi.exceptions.CmiReaderServiceException;
 import com.logreposit.ta.cmireaderservice.utils.http.HttpClient;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthCredentials;
