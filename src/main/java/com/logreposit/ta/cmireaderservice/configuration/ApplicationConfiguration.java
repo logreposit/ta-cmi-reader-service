@@ -1,6 +1,6 @@
 package com.logreposit.ta.cmireaderservice.configuration;
 
-import com.logreposit.ta.cmireaderservice.dtos.logreposit.tacmi.enums.DeviceType;
+import com.logreposit.ta.cmireaderservice.dtos.common.DeviceType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

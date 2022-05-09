@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiInput;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingAnalog;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingDigital;
+import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkAnalog;
+import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkDigital;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiOutput;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +31,12 @@ public class CmiApiResponseData
     @JsonProperty(value = "Logging Digital")
     private List<CmiApiLoggingDigital> digitalLoggingValues;
 
+    @JsonProperty(value = "Network Analog")
+    private List<CmiApiNetworkAnalog> analogNetworkValues;
+
+    @JsonProperty(value = "Network Digital")
+    private List<CmiApiNetworkDigital> digitalNetworkValues;
+
     @JsonProperty(value = "DL-Bus")
     private List<Object> dlBusValues;
 
@@ -38,6 +46,8 @@ public class CmiApiResponseData
         this.outputs              = new ArrayList<>();
         this.analogLoggingValues  = new ArrayList<>();
         this.digitalLoggingValues = new ArrayList<>();
+        this.analogNetworkValues  = new ArrayList<>();
+        this.digitalNetworkValues = new ArrayList<>();
         this.dlBusValues          = new ArrayList<>();
     }
 }

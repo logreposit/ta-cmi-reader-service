@@ -14,24 +14,6 @@ public class RetryTemplateFactory
     {
     }
 
-    public static RetryTemplate getRetryTemplateWithExponentialBackOffForAllExceptions(int maxAttempts,
-                                                                                       long initialBackOffInterval,
-                                                                                       double backOffMultiplier)
-    {
-        SimpleRetryPolicy simpleRetryPolicy = new SimpleRetryPolicy();
-        simpleRetryPolicy.setMaxAttempts(maxAttempts);
-
-        ExponentialBackOffPolicy exponentialBackOffPolicy = new ExponentialBackOffPolicy();
-        exponentialBackOffPolicy.setInitialInterval(initialBackOffInterval);
-        exponentialBackOffPolicy.setMultiplier(backOffMultiplier);
-
-        RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setBackOffPolicy(exponentialBackOffPolicy);
-        retryTemplate.setRetryPolicy(simpleRetryPolicy);
-
-        return retryTemplate;
-    }
-
     public static RetryTemplate getRetryTemplateWithExponentialBackOffForGivenException(int maxAttempts,
                                                                                         long initialBackOffInterval,
                                                                                         double backOffMultiplier,
