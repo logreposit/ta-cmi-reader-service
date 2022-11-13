@@ -1,13 +1,19 @@
 package com.logreposit.ta.cmireaderservice.utils.http;
 
+import com.logreposit.ta.cmireaderservice.utils.http.authentication.AuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthUtils;
+import com.logreposit.ta.cmireaderservice.utils.http.authentication.SessionAuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.common.HttpClientRequestMethod;
 import com.logreposit.ta.cmireaderservice.utils.http.common.HttpClientResponse;
 import com.logreposit.ta.cmireaderservice.utils.http.exceptions.HttpClientException;
+import com.logreposit.ta.cmireaderservice.utils.http.payload.FormDataPayload;
+import com.logreposit.ta.cmireaderservice.utils.http.payload.JsonPayload;
+import com.logreposit.ta.cmireaderservice.utils.http.payload.Payload;
 import com.logreposit.ta.cmireaderservice.utils.logging.LoggingUtils;
 import com.logreposit.ta.cmireaderservice.utils.retry.RetryTemplateFactory;
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class HttpClientImpl implements HttpClient
@@ -58,7 +65,7 @@ public class HttpClientImpl implements HttpClient
     }
 
     @Override
-    public HttpClientResponse get(String url, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    public HttpClientResponse get(String url, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         HttpClientResponse httpClientResponse = this.call(HttpClientRequestMethod.GET, url, null, basicAuthCredentials);
         return httpClientResponse;
@@ -71,19 +78,19 @@ public class HttpClientImpl implements HttpClient
     }
 
     @Override
-    public HttpClientResponse post(String url, String payload) throws HttpClientException
+    public HttpClientResponse post(String url, Payload payload) throws HttpClientException
     {
         return this.post(url, payload, null);
     }
 
     @Override
-    public HttpClientResponse post(String url, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    public HttpClientResponse post(String url, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         return this.post(url, null, basicAuthCredentials);
     }
 
     @Override
-    public HttpClientResponse post(String url, String payload, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    public HttpClientResponse post(String url, Payload payload, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         HttpClientResponse httpClientResponse = this.call(HttpClientRequestMethod.POST, url, payload, basicAuthCredentials);
 
@@ -91,13 +98,13 @@ public class HttpClientImpl implements HttpClient
     }
 
     @Override
-    public HttpClientResponse put(String url, String payload) throws HttpClientException
+    public HttpClientResponse put(String url, Payload payload) throws HttpClientException
     {
         return this.put(url, payload, null);
     }
 
     @Override
-    public HttpClientResponse put(String url, String payload, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    public HttpClientResponse put(String url, Payload payload, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         HttpClientResponse httpClientResponse = this.call(HttpClientRequestMethod.PUT, url, payload, basicAuthCredentials);
 
@@ -112,14 +119,14 @@ public class HttpClientImpl implements HttpClient
     }
 
     @Override
-    public HttpClientResponse delete(String url, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    public HttpClientResponse delete(String url, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         HttpClientResponse httpClientResponse = this.call(HttpClientRequestMethod.DELETE, url, null, basicAuthCredentials);
 
         return httpClientResponse;
     }
 
-    private HttpClientResponse call(HttpClientRequestMethod method, String url, String payload, BasicAuthCredentials basicAuthCredentials) throws HttpClientException
+    private HttpClientResponse call(HttpClientRequestMethod method, String url, Payload payload, AuthCredentials basicAuthCredentials) throws HttpClientException
     {
         HttpClientResponse httpClientResponse = new HttpClientResponse();
         httpClientResponse.setRequestMethod(method);
@@ -144,7 +151,7 @@ public class HttpClientImpl implements HttpClient
                 request = this.buildPostRequest(requestBuilder, payload);
                 break;
             default:
-                throw new HttpClientException(String.format("UNKNOWN Request Method %s", method.toString()), httpClientResponse);
+                throw new HttpClientException(String.format("UNKNOWN Request Method %s", method), httpClientResponse);
         }
 
         if (request != null && request.headers() != null && request.headers().toMultimap().size() > 0)
@@ -161,9 +168,9 @@ public class HttpClientImpl implements HttpClient
         return httpClientResponse;
     }
 
-    private Request buildPostRequest(Request.Builder requestBuilder, String payload)
+    private Request buildPostRequest(Request.Builder requestBuilder, Payload payload)
     {
-        RequestBody requestBody = this.buildResponseBody(payload);
+        RequestBody requestBody = this.buildRequestBody(payload);
 
         if (payload == null)
         {
@@ -175,9 +182,9 @@ public class HttpClientImpl implements HttpClient
         return request;
     }
 
-    private Request buildPutRequest(Request.Builder requestBuilder, String payload)
+    private Request buildPutRequest(Request.Builder requestBuilder, Payload payload)
     {
-        RequestBody requestBody = this.buildResponseBody(payload);
+        RequestBody requestBody = this.buildRequestBody(payload);
 
         if (payload == null)
             requestBuilder.addHeader("Content-Length", "0");
@@ -187,16 +194,26 @@ public class HttpClientImpl implements HttpClient
         return request;
     }
 
-    private RequestBody buildResponseBody(String payload)
+    private RequestBody buildRequestBody(Payload payload)
     {
         if (payload == null)
         {
             return RequestBody.create(null, new byte[0]);
         }
-        else
-        {
-            return RequestBody.create(MEDIA_TYPE_JSON, payload);
+
+        if (payload instanceof JsonPayload jsonPayload) {
+            return RequestBody.create(MEDIA_TYPE_JSON, jsonPayload.getBody());
         }
+
+        if (payload instanceof FormDataPayload formDataPayload) {
+            final var formBodyBuilder = new FormBody.Builder();
+
+            formDataPayload.getFormData().forEach(formBodyBuilder::add);
+
+            return formBodyBuilder.build();
+        }
+
+        throw new RuntimeException("Invalid payload!");
     }
 
     private void executeRequest(Request request, HttpClientResponse httpClientResponse) throws HttpClientException
@@ -255,11 +272,17 @@ public class HttpClientImpl implements HttpClient
         }
     }
 
-    private Request.Builder getBasicRequestBuilder(String url, BasicAuthCredentials basicAuthCredentials)
+    private Request.Builder getBasicRequestBuilder(String url, AuthCredentials authCredentials)
     {
         Request.Builder requestBuilder = new Request.Builder().url(url);
 
-        this.addHeadersToRequestBuilder(requestBuilder, basicAuthCredentials);
+        if (authCredentials instanceof BasicAuthCredentials basicAuthCredentials) {
+            this.addHeadersToRequestBuilder(requestBuilder, basicAuthCredentials);
+        }
+
+        if (authCredentials instanceof SessionAuthCredentials sessionAuthCredentials) {
+            this.addHeadersToRequestBuilder(requestBuilder, sessionAuthCredentials);
+        }
 
         return requestBuilder;
     }
@@ -277,6 +300,14 @@ public class HttpClientImpl implements HttpClient
         {
             requestBuilder.addHeader(header.getKey(), header.getValue());
         }
+    }
+
+    private void addHeadersToRequestBuilder(Request.Builder requestBuilder, SessionAuthCredentials sessionAuthCredentials) {
+        if (requestBuilder == null || sessionAuthCredentials == null || sessionAuthCredentials.getCookies() == null || sessionAuthCredentials.getCookies().isEmpty()) {
+            return;
+        }
+
+        requestBuilder.addHeader("Cookie", sessionAuthCredentials.getCookies().entrySet().stream().map(e -> String.format("%s=%s", e.getKey(), e.getValue())).collect(Collectors.joining("; ")));
     }
 
     private static Map<String, String> buildHeaders(BasicAuthCredentials basicAuthCredentials)

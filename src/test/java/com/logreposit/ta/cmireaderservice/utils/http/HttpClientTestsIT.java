@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logreposit.ta.cmireaderservice.utils.http.authentication.BasicAuthCredentials;
 import com.logreposit.ta.cmireaderservice.utils.http.common.HttpClientResponse;
 import com.logreposit.ta.cmireaderservice.utils.http.exceptions.HttpClientException;
+import com.logreposit.ta.cmireaderservice.utils.http.payload.JsonPayload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,8 +65,7 @@ public class HttpClientTestsIT
     }
 
     @Test
-    public void testInvalidRequestMethodWithPostCall()
-    {
+    public void testInvalidRequestMethodWithPostCall() throws JsonProcessingException {
         String username = "myusernameAwesome";
         String password = "X";
         String url      = "https://httpbin.org/get";
@@ -74,7 +74,11 @@ public class HttpClientTestsIT
         hashMap.put("myKey1", "myValue1");
         hashMap.put("myKey2", "myValue2");
 
-        var exception = catchThrowableOfType(() -> this.httpClient.post(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var payload = new JsonPayload();
+
+        payload.setBody(objectMapper.writeValueAsString(hashMap));
+
+        var exception = catchThrowableOfType(() -> this.httpClient.post(url, payload, new BasicAuthCredentials(username, password)), HttpClientException.class);
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
@@ -90,7 +94,11 @@ public class HttpClientTestsIT
         hashMap.put("myKey1", "myValue1");
         hashMap.put("myKey2", "myValue2");
 
-        var exception = catchThrowableOfType(() -> this.httpClient.put(url, objectMapper.writeValueAsString(hashMap), new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var payload = new JsonPayload();
+
+        payload.setBody(objectMapper.writeValueAsString(hashMap));
+
+        var exception = catchThrowableOfType(() -> this.httpClient.put(url, payload, new BasicAuthCredentials(username, password)), HttpClientException.class);
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }

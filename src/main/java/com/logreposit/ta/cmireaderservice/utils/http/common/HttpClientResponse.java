@@ -1,5 +1,7 @@
 package com.logreposit.ta.cmireaderservice.utils.http.common;
 
+import com.logreposit.ta.cmireaderservice.utils.http.payload.Payload;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,7 @@ public class HttpClientResponse
     private Long                      receivedResponseAtMillis;
     private HttpClientRequestMethod   requestMethod;
     private String                    requestUrl;
-    private String                    requestBody;
+    private Payload                   requestBody;
     private byte[]                    responseBodyAsBytes;
     private String                    responseBody;
     private Map<String, List<String>> requestHeaders;
@@ -85,12 +87,12 @@ public class HttpClientResponse
         this.receivedResponseAtMillis = receivedResponseAtMillis;
     }
 
-    public String getRequestBody()
+    public Payload getRequestBody()
     {
         return this.requestBody;
     }
 
-    public void setRequestBody(String requestBody)
+    public void setRequestBody(Payload requestBody)
     {
         this.requestBody = requestBody;
     }
