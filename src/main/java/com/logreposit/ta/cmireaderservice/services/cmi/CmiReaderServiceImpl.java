@@ -59,7 +59,7 @@ public class CmiReaderServiceImpl implements CmiReaderService
 
     private CmiApiResponse readFromWebPortal(String address, String username, String password, int node, DeviceType deviceType) throws CmiReaderServiceException {
         final var authCredentials = login(username, password);
-        final var url = buildCmiUrl(address, node, buildSelector(deviceType));
+        final var url = buildCmiWebportalUrl(address, node, buildSelector(deviceType));
 
         return readFromCmi(url, authCredentials);
     }
