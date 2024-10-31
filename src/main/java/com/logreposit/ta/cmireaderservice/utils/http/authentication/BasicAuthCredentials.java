@@ -1,7 +1,7 @@
 package com.logreposit.ta.cmireaderservice.utils.http.authentication;
 
 
-public class BasicAuthCredentials
+public class BasicAuthCredentials implements AuthCredentials
 {
     private String username;
     private String password;
