@@ -26,9 +26,9 @@ public class CmiApiResponseTestUtil
 
             softly.assertThat(data.getInputs()).hasSize(16);
             softly.assertThat(data.getOutputs()).hasSize(10);
-            softly.assertThat(data.getAnalogLoggingValues()).hasSize(13);
-            softly.assertThat(data.getDigitalLoggingValues()).hasSize(6);
-            softly.assertThat(data.getDlBusValues()).hasSize(0);
+            softly.assertThat(data.getLoggingAnalog()).hasSize(13);
+            softly.assertThat(data.getLoggingDigital()).hasSize(6);
+            softly.assertThat(data.getDlBus()).hasSize(0);
         });
 
         for (CmiApiInput cmiApiInput : cmiApiResponse.getData().getInputs())
@@ -55,12 +55,12 @@ public class CmiApiResponseTestUtil
             assertThat(cmiApiOutput.getValue().getRas()).isNull();
         }
 
-        for (CmiApiIO cmiApiLoggingAnalog : cmiApiResponse.getData().getAnalogLoggingValues())
+        for (CmiApiIO cmiApiLoggingAnalog : cmiApiResponse.getData().getLoggingAnalog())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiLoggingAnalog);
         }
 
-        for (CmiApiLoggingDigital cmiApiLoggingDigital : cmiApiResponse.getData().getDigitalLoggingValues())
+        for (CmiApiLoggingDigital cmiApiLoggingDigital : cmiApiResponse.getData().getLoggingDigital())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiLoggingDigital);
         }
