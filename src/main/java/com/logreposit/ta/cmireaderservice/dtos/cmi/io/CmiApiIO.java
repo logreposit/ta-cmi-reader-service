@@ -8,7 +8,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public abstract class CmiApiIO
+public class CmiApiIO
 {
     @JsonProperty(value = "Number")
     private Integer number;

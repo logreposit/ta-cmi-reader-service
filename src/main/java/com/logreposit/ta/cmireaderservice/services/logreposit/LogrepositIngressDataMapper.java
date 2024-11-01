@@ -46,12 +46,12 @@ public class LogrepositIngressDataMapper
         final var correctedLogDate = this.getCorrectedDateInstanceForCmiTimestamp(cmiApiResponse.getHeader().getTimestamp());
         final var data = cmiApiResponse.getData();
 
-        final var inputReadings = data.getInputs().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var outputReadings = data.getOutputs().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var analogLoggingReadings = data.getAnalogLoggingValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var digitalLoggingReadings = data.getDigitalLoggingValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var analogNetworkReadings = data.getAnalogNetworkValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var digitalNetworkReadings = data.getDigitalNetworkValues().stream().map(r -> convert(r, correctedLogDate)).toList();
+        final var inputReadings = data.getInputs().stream().map(r -> convert(r, correctedLogDate, "input")).toList();
+        final var outputReadings = data.getOutputs().stream().map(r -> convert(r, correctedLogDate, "output")).toList();
+        final var analogLoggingReadings = data.getLoggingAnalog().stream().map(r -> convert(r, correctedLogDate, "analog_logging")).toList();
+        final var digitalLoggingReadings = data.getLoggingDigital().stream().map(r -> convert(r, correctedLogDate, "digital_logging")).toList();
+        final var analogNetworkReadings = data.getAnalogNetworkValues().stream().map(r -> convert(r, correctedLogDate, "analog_network")).toList();
+        final var digitalNetworkReadings = data.getDigitalNetworkValues().stream().map(r -> convert(r, correctedLogDate, "digital_network")).toList();
 
         final var readings = Stream.of(inputReadings,
                                        outputReadings,
@@ -73,36 +73,8 @@ public class LogrepositIngressDataMapper
         return correctDate.toInstant();
     }
 
-    private Reading convert(CmiApiIO cmiApiIO, Instant date) {
-        return new Reading(date, getMeasurementName(cmiApiIO), getTags(cmiApiIO), getFields(cmiApiIO));
-    }
-
-    private String getMeasurementName(CmiApiIO cmiApiIO) {
-        if (cmiApiIO instanceof CmiApiInput) {
-            return "input";
-        }
-
-        if (cmiApiIO instanceof CmiApiOutput) {
-            return "output";
-        }
-
-        if (cmiApiIO instanceof CmiApiLoggingAnalog) {
-            return "analog_logging";
-        }
-
-        if (cmiApiIO instanceof CmiApiLoggingDigital) {
-            return "digital_logging";
-        }
-
-        if (cmiApiIO instanceof CmiApiNetworkAnalog) {
-            return "analog_network";
-        }
-
-        if (cmiApiIO instanceof CmiApiNetworkDigital) {
-            return "digital_network";
-        }
-
-        throw new LogrepositIngressDataMapperException("Unable to determine measurement name");
+    private Reading convert(CmiApiIO cmiApiIO, Instant date, String measurementName) {
+        return new Reading(date, measurementName, getTags(cmiApiIO), getFields(cmiApiIO));
     }
 
     private List<Tag> getTags(CmiApiIO io) {
