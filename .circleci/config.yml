@@ -2,8 +2,8 @@ version: 2.1
 
 
 orbs:
-  maven: circleci/maven@1.2.0
-  codecov: codecov/codecov@3.2.2
+  maven: circleci/maven@1.4.1
+  codecov: codecov/codecov@5.0.0
 
 
 executors:
@@ -11,7 +11,7 @@ executors:
     environment:
       _JAVA_OPTIONS: "-Xmx512m"
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:21.0
 
 
 jobs:
@@ -136,7 +136,7 @@ jobs:
   push:
     resource_class: small
     docker:
-      - image: cimg/base:stable-18.04
+      - image: cimg/base:current-22.04
     steps:
       - attach_workspace:
           at: /home/circleci/
