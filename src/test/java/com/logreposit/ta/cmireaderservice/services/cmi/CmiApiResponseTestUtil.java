@@ -2,9 +2,6 @@ package com.logreposit.ta.cmireaderservice.services.cmi;
 
 import com.logreposit.ta.cmireaderservice.dtos.cmi.CmiApiResponse;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiIO;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiInput;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingDigital;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiOutput;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -31,7 +28,7 @@ public class CmiApiResponseTestUtil
             softly.assertThat(data.getDlBus()).hasSize(0);
         });
 
-        for (CmiApiInput cmiApiInput : cmiApiResponse.getData().getInputs())
+        for (final var cmiApiInput : cmiApiResponse.getData().getInputs())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiInput);
 
@@ -43,7 +40,7 @@ public class CmiApiResponseTestUtil
             assertThat(cmiApiInput.getValue().getState()).isNull();
         }
 
-        for (CmiApiOutput cmiApiOutput : cmiApiResponse.getData().getOutputs())
+        for (final var cmiApiOutput : cmiApiResponse.getData().getOutputs())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiOutput);
 
@@ -55,12 +52,12 @@ public class CmiApiResponseTestUtil
             assertThat(cmiApiOutput.getValue().getRas()).isNull();
         }
 
-        for (CmiApiIO cmiApiLoggingAnalog : cmiApiResponse.getData().getLoggingAnalog())
+        for (final var cmiApiLoggingAnalog : cmiApiResponse.getData().getLoggingAnalog())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiLoggingAnalog);
         }
 
-        for (CmiApiLoggingDigital cmiApiLoggingDigital : cmiApiResponse.getData().getLoggingDigital())
+        for (final var cmiApiLoggingDigital : cmiApiResponse.getData().getLoggingDigital())
         {
             checkIfCmiLoggingValuesArePresent(cmiApiLoggingDigital);
         }
