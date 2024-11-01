@@ -3,7 +3,6 @@ package com.logreposit.ta.cmireaderservice.dtos.cmi;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiIO;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiInput;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingAnalog;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingDigital;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkAnalog;
@@ -21,7 +20,7 @@ import java.util.List;
 public class CmiApiResponseData
 {
     @JsonProperty(value = "Inputs")
-    private List<CmiApiInput> inputs;
+    private List<CmiApiIO> inputs;
 
     @JsonProperty(value = "Outputs")
     private List<CmiApiOutput> outputs;
