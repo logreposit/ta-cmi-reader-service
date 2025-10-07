@@ -18,10 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -41,10 +41,10 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @RestClientTest(LogrepositApiService.class)
 @Import(RetryConfiguration.class)
 public class LogrepositApiServiceTests {
-    @MockBean
+    @MockitoBean
     private ApplicationConfiguration applicationConfiguration;
 
-    @MockBean
+    @MockitoBean
     private LogrepositIngressDefinitionProvider ingressDefinitionProvider;
 
     @Autowired
