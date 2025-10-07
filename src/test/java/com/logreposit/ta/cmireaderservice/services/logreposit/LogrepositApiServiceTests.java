@@ -96,7 +96,9 @@ public class LogrepositApiServiceTests {
 
         final var thrown = Assertions.catchThrowable(() -> client.pushData(sampleIngressData()));
 
-        Assertions.assertThat(thrown.getMessage()).isEqualTo("500 Internal Server Error: [no body]");
+        Assertions.assertThat(thrown.getMessage())
+                .isEqualTo("500 Internal Server Error on POST request for \"https://api.logreposit.local/v2/ingress/data\": [no body]");
+
         Assertions.assertThat(System.currentTimeMillis() - started).isBetween(2000L, 3500L);
 
         server.verify();
