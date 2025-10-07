@@ -3,11 +3,6 @@ package com.logreposit.ta.cmireaderservice.services.logreposit;
 import com.logreposit.ta.cmireaderservice.configuration.ApplicationConfiguration;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.CmiApiResponse;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiIO;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiInput;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingAnalog;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiLoggingDigital;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkAnalog;
-import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiNetworkDigital;
 import com.logreposit.ta.cmireaderservice.dtos.cmi.io.CmiApiOutput;
 import com.logreposit.ta.cmireaderservice.dtos.common.RasState;
 import com.logreposit.ta.cmireaderservice.dtos.common.SignalType;
@@ -19,7 +14,6 @@ import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.Reading;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.StringField;
 import com.logreposit.ta.cmireaderservice.services.logreposit.dtos.ingress.data.Tag;
-import com.logreposit.ta.cmireaderservice.services.logreposit.exceptions.LogrepositIngressDataMapperException;
 import com.logreposit.ta.cmireaderservice.utils.TimeUtils;
 import org.springframework.stereotype.Component;
 
@@ -46,15 +40,17 @@ public class LogrepositIngressDataMapper
         final var correctedLogDate = this.getCorrectedDateInstanceForCmiTimestamp(cmiApiResponse.getHeader().getTimestamp());
         final var data = cmiApiResponse.getData();
 
-        final var inputReadings = data.getInputs().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var outputReadings = data.getOutputs().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var analogLoggingReadings = data.getAnalogLoggingValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var digitalLoggingReadings = data.getDigitalLoggingValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var analogNetworkReadings = data.getAnalogNetworkValues().stream().map(r -> convert(r, correctedLogDate)).toList();
-        final var digitalNetworkReadings = data.getDigitalNetworkValues().stream().map(r -> convert(r, correctedLogDate)).toList();
+        final var inputReadings = toLogrepositReading(data.getInputs(), correctedLogDate, "input");
+        final var outputReadings = toLogrepositReading(data.getOutputs(), correctedLogDate, "output");
+        final var dlBusReadings = toLogrepositReading(data.getDlBus(), correctedLogDate, "dl_bus");
+        final var analogNetworkReadings = toLogrepositReading(data.getAnalogNetworkValues(), correctedLogDate, "analog_network");
+        final var digitalNetworkReadings = toLogrepositReading(data.getDigitalNetworkValues(), correctedLogDate, "digital_network");
+        final var analogLoggingReadings = toLogrepositReading(data.getLoggingAnalog(), correctedLogDate, "analog_logging");
+        final var digitalLoggingReadings = toLogrepositReading(data.getLoggingDigital(), correctedLogDate, "digital_logging");
 
         final var readings = Stream.of(inputReadings,
                                        outputReadings,
+                                       dlBusReadings,
                                        analogLoggingReadings,
                                        digitalLoggingReadings,
                                        analogNetworkReadings,
@@ -62,6 +58,12 @@ public class LogrepositIngressDataMapper
                                    .flatMap(Collection::stream).toList();
 
         return new IngressData(readings);
+    }
+
+    private List<Reading> toLogrepositReading(List<? extends CmiApiIO> cmiApiIos, Instant date, String measurementName) {
+        return Optional.ofNullable(cmiApiIos).orElse(List.of()).stream()
+                .map(r -> convert(r, date, measurementName))
+                .toList();
     }
 
     private Instant getCorrectedDateInstanceForCmiTimestamp(long epochSeconds)
@@ -73,36 +75,8 @@ public class LogrepositIngressDataMapper
         return correctDate.toInstant();
     }
 
-    private Reading convert(CmiApiIO cmiApiIO, Instant date) {
-        return new Reading(date, getMeasurementName(cmiApiIO), getTags(cmiApiIO), getFields(cmiApiIO));
-    }
-
-    private String getMeasurementName(CmiApiIO cmiApiIO) {
-        if (cmiApiIO instanceof CmiApiInput) {
-            return "input";
-        }
-
-        if (cmiApiIO instanceof CmiApiOutput) {
-            return "output";
-        }
-
-        if (cmiApiIO instanceof CmiApiLoggingAnalog) {
-            return "analog_logging";
-        }
-
-        if (cmiApiIO instanceof CmiApiLoggingDigital) {
-            return "digital_logging";
-        }
-
-        if (cmiApiIO instanceof CmiApiNetworkAnalog) {
-            return "analog_network";
-        }
-
-        if (cmiApiIO instanceof CmiApiNetworkDigital) {
-            return "digital_network";
-        }
-
-        throw new LogrepositIngressDataMapperException("Unable to determine measurement name");
+    private Reading convert(CmiApiIO cmiApiIO, Instant date, String measurementName) {
+        return new Reading(date, measurementName, getTags(cmiApiIO), getFields(cmiApiIO));
     }
 
     private List<Tag> getTags(CmiApiIO io) {

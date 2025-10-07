@@ -18,10 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -41,10 +41,10 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @RestClientTest(LogrepositApiService.class)
 @Import(RetryConfiguration.class)
 public class LogrepositApiServiceTests {
-    @MockBean
+    @MockitoBean
     private ApplicationConfiguration applicationConfiguration;
 
-    @MockBean
+    @MockitoBean
     private LogrepositIngressDefinitionProvider ingressDefinitionProvider;
 
     @Autowired
@@ -96,7 +96,9 @@ public class LogrepositApiServiceTests {
 
         final var thrown = Assertions.catchThrowable(() -> client.pushData(sampleIngressData()));
 
-        Assertions.assertThat(thrown.getMessage()).isEqualTo("500 Internal Server Error: [no body]");
+        Assertions.assertThat(thrown.getMessage())
+                .isEqualTo("500 Internal Server Error on POST request for \"https://api.logreposit.local/v2/ingress/data\": [no body]");
+
         Assertions.assertThat(System.currentTimeMillis() - started).isBetween(2000L, 3500L);
 
         server.verify();

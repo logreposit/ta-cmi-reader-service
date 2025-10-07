@@ -1,6 +1,6 @@
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 
-MAINTAINER Dominic Miglar <dominic.miglar@netunix.at>
+LABEL org.opencontainers.image.authors="dominic.miglar@netunix.at"
 
 WORKDIR /opt/logreposit/ta-cmi-reader-service
 

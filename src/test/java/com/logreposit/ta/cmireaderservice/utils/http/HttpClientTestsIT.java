@@ -46,7 +46,7 @@ public class HttpClientTestsIT
         String password = "X";
         String url      = String.format("https://httpbin.org/basic-auth/%s/%s", username, password + "invalid");
 
-        var exception = catchThrowableOfType(() -> this.httpClient.get(url, new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var exception = catchThrowableOfType(HttpClientException.class, () -> this.httpClient.get(url, new BasicAuthCredentials(username, password)));
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(401);
     }
@@ -78,7 +78,7 @@ public class HttpClientTestsIT
 
         payload.setBody(objectMapper.writeValueAsString(hashMap));
 
-        var exception = catchThrowableOfType(() -> this.httpClient.post(url, payload, new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var exception = catchThrowableOfType(HttpClientException.class, () -> this.httpClient.post(url, payload, new BasicAuthCredentials(username, password)));
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
@@ -98,7 +98,7 @@ public class HttpClientTestsIT
 
         payload.setBody(objectMapper.writeValueAsString(hashMap));
 
-        var exception = catchThrowableOfType(() -> this.httpClient.put(url, payload, new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var exception = catchThrowableOfType(HttpClientException.class, () -> this.httpClient.put(url, payload, new BasicAuthCredentials(username, password)));
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }
@@ -110,7 +110,7 @@ public class HttpClientTestsIT
         String password = "X";
         String url      = "https://httpbin.org/get";
 
-        var exception = catchThrowableOfType(() -> this.httpClient.delete(url, new BasicAuthCredentials(username, password)), HttpClientException.class);
+        var exception = catchThrowableOfType(HttpClientException.class, () -> this.httpClient.delete(url, new BasicAuthCredentials(username, password)));
 
         assertThat(exception.getHttpClientResponse().getHttpStatusCode()).isEqualTo(405);
     }

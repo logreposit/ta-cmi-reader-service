@@ -198,11 +198,12 @@ public class HttpClientImpl implements HttpClient
     {
         if (payload == null)
         {
-            return RequestBody.create(null, new byte[0]);
+            // return RequestBody.create(null, new byte[0]);
+            return RequestBody.create(new byte[0], null);
         }
 
         if (payload instanceof JsonPayload jsonPayload) {
-            return RequestBody.create(MEDIA_TYPE_JSON, jsonPayload.getBody());
+            return RequestBody.create(jsonPayload.getBody(), MEDIA_TYPE_JSON);
         }
 
         if (payload instanceof FormDataPayload formDataPayload) {

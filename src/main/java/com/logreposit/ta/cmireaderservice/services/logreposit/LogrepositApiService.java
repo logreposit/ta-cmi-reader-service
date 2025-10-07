@@ -33,14 +33,14 @@ public class LogrepositApiService
         this.ingressDefinitionProvider = ingressDefinitionProvider;
 
         this.restTemplate = restTemplateBuilder
-                .setConnectTimeout(Duration.of(10, ChronoUnit.SECONDS))
-                .setReadTimeout(Duration.of(10, ChronoUnit.SECONDS))
+                .connectTimeout(Duration.of(10, ChronoUnit.SECONDS))
+                .readTimeout(Duration.of(10, ChronoUnit.SECONDS))
                 .build();
     }
 
     @Retryable(
-            value = {RestClientException.class},
-            exclude = {HttpClientErrorException.UnprocessableEntity.class},
+            retryFor = {RestClientException.class},
+            noRetryFor = {HttpClientErrorException.UnprocessableEntity.class},
             maxAttempts = 5,
             backoff = @Backoff(delay = 500)
     )

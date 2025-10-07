@@ -28,6 +28,7 @@ public class LogrepositIngressDefinitionProvider
                                         new FieldDefinition("state", DataType.INTEGER, "state")
                                 )
                         ),
+                        new MeasurementDefinition("dl_bus", tags, List.of(valueField, rasStateField)),
                         new MeasurementDefinition("analog_logging", tags, List.of(valueField, rasStateField)),
                         new MeasurementDefinition("digital_logging", tags, List.of(valueField)),
                         new MeasurementDefinition("analog_network", tags, List.of(valueField)),
