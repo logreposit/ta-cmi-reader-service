@@ -2,8 +2,8 @@ version: 2.1
 
 
 orbs:
-  maven: circleci/maven@1.4.1
-  codecov: codecov/codecov@5.0.0
+  maven: circleci/maven@2.1.1
+  codecov: codecov/codecov@5.4.3
 
 
 executors:
@@ -179,3 +179,4 @@ workflows:
           requires:
             - build
             - tests
+
